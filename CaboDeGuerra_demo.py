@@ -27,20 +27,31 @@ crashed = False
 #game loop
 while not crashed:
     
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+    for ev in pygame.event.get():
+        if ev.type == pygame.QUIT:
             crashed = True
+        if ev.type == pygame.KEYDOWN:
+            if ev.key == pygame.K_q and px > 0:
+                px += 5
+            if ev.key == pygame.K_p and px > 0:
+                px -= 5
+            if ev.key == pygame.K_LSHIFT and px < 400:
+                px += 5
+            if ev.key == pygame.K_RSHIFT and px < 400:
+                px -= 5
+            
             
     gameDisplay.fill((30, 35, 40))
 #    player(px, py)
     
-    pygame.draw.rect(gameDisplay, (0,0,255), (200,275,400,50), 0)
-    pygame.draw.rect(gameDisplay, (255,0,0), (200,275,px,50), 0)
-
-    if pygame.key.get_pressed()[pygame.K_q] and px > 0 or pygame.key.get_pressed()[pygame.K_p] and px > 0:
-        px -= 1
-    if pygame.key.get_pressed()[pygame.K_RSHIFT] and px < 400 or pygame.key.get_pressed()[pygame.K_LSHIFT] and px < 400:
-        px += 1
+    pygame.draw.rect(gameDisplay, (0,0,255), (200,375,400,50), 0)
+    pygame.draw.rect(gameDisplay, (255,0,0), (200,375,px,50), 0)
+    button_pressed = False
+    
+        
+#    if pygame.key.get_pressed()[pygame.K_RSHIFT] and px < 400 or \
+#       pygame.key.get_pressed()[pygame.K_LSHIFT] and px < 400:
+#        px += 1
             
     pygame.display.update()
     
