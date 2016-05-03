@@ -38,46 +38,46 @@ def character(img, position, orientation):
     
         
 
-c1 = pygame.image.load("rope_igual.png")
+c1 = pygame.image.load("CDG_Images/rope_igual.png")
 c1 = pygame.transform.scale(c1, (400, 20))
-c_e = pygame.image.load("rope_esquerda1.png")
+c_e = pygame.image.load("CDG_Images/rope_esquerda1.png")
 c_e = pygame.transform.scale(c_e, (400, 20))
-c_d = pygame.image.load("rope_direita1.png")
+c_d = pygame.image.load("CDG_Images/rope_direita1.png")
 c_d = pygame.transform.scale(c_d, (400, 20))
-mountain = pygame.image.load("Pixel_mountain.png")
+mountain = pygame.image.load("CDG_Images/Pixel_mountain.png")
 mountain = pygame.transform.scale(mountain, (1000, 200))
-PM = pygame.image.load("Pixel_PM.png")
-QZ = pygame.image.load("Pixel_QZ.png")
-start0 = pygame.image.load("START_0.png")
+PM = pygame.image.load("CDG_Images/Pixel_PM.png")
+QZ = pygame.image.load("CDG_Images/Pixel_QZ.png")
+start0 = pygame.image.load("CDG_Images/START_0.png")
 start0 = pygame.transform.scale(start0, (200, 200))
-start1 = pygame.image.load("START_1.png")
+start1 = pygame.image.load("CDG_Images/START_1.png")
 start1 = pygame.transform.scale(start1, (200, 200))
 
 def p_marrom1(x, y):
-    character("char1.1.png", (x, y), right)
+    character("CDG_Images/char1.1.png", (x, y), right)
 def p_amarelo1(x, y):
-    character("char2.1.png", (x, y), right)
+    character("CDG_Images/char2.1.png", (x, y), right)
 def p_rosa1(x, y):
-    character("char3.1.png", (x, y), right)
+    character("CDG_Images/char3.1.png", (x, y), right)
 def p_marrom2(x, y):
-    character("char1.2.png", (x, y), right)
+    character("CDG_Images/char1.2.png", (x, y), right)
 def p_amarelo2(x, y):
-    character("char2.2.png", (x, y), right)
+    character("CDG_Images/char2.2.png", (x, y), right)
 def p_rosa2(x, y):
-    character("char3.2.png", (x, y), right)
+    character("CDG_Images/char3.2.png", (x, y), right)
 
 def p_marrom10(x, y):
-    character("char1.1.png", (x, y), left)
+    character("CDG_Images/char1.1.png", (x, y), left)
 def p_amarelo10(x, y):
-    character("char2.1.png", (x, y), left)
+    character("CDG_Images/char2.1.png", (x, y), left)
 def p_rosa10(x, y):
-    character("char3.1.png", (x, y), left)
+    character("CDG_Images/char3.1.png", (x, y), left)
 def p_marrom20(x, y):
-    character("char1.2.png", (x, y), left)
+    character("CDG_Images/char1.2.png", (x, y), left)
 def p_amarelo20(x, y):
-    character("char2.2.png", (x, y), left)
+    character("CDG_Images/char2.2.png", (x, y), left)
 def p_rosa20(x, y):
-    character("char3.2.png", (x, y), left)
+    character("CDG_Images/char3.2.png", (x, y), left)
     
 def corda_i(x, y):
     gameDisplay.blit((c1), (x, y))
@@ -90,7 +90,7 @@ def mountain_bg(x, y):
     gameDisplay.blit((mountain), (x, y))
     
 def cloud1(x, y):
-    gameDisplay.blit(pygame.transform.scale((pygame.image.load("Pixel_cloud1.png")), (400, 400)), (x, y))
+    gameDisplay.blit(pygame.transform.scale((pygame.image.load("CDG_Images/Pixel_cloud1.png")), (400, 400)), (x, y))
     
 def PM_bg(x, y):
     gameDisplay.blit((PM), (x, y))
@@ -135,7 +135,7 @@ while not select:
             pygame.quit()
 #           sys.exit()
     
-    Tug = pygame.image.load("Tug_War.png")
+    Tug = pygame.image.load("CDG_Images/Tug_War.png")
     Tug = pygame.transform.scale(Tug, (800 + TitleSize, 800 + TitleSize))
             
     TitleSize = int((15*(1+math.sin(2*3.14*n*0.01)))*0.5)
