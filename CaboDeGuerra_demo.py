@@ -1,6 +1,7 @@
 import pygame
 import math
 
+
 pygame.init()
 
 display_width = 800
@@ -16,6 +17,8 @@ n = 0
 original = 0
 right = 0
 left = 1
+
+j = 0.1
 
 #class Thing:
 
@@ -60,6 +63,9 @@ n1 = pygame.image.load("CDG_Images/No_1.png")
 n1 = pygame.transform.scale(n1, (300, 300))
 win_bg = pygame.image.load("CDG_Images/White_Square50.png")
 win_bg = pygame.transform.scale(win_bg, (800, 600))
+win_font = pygame.font.SysFont("pixelmix Regular", 100)
+text = win_font.render("YOU WIN!", True, (0,0,0))
+
 #win_bg = pygame.Color.a(30)
 
 def p_marrom1(x, y):
@@ -121,8 +127,11 @@ def N2(x, y):
 def N1(x, y):
     gameDisplay.blit((n1), (x, y))
     
-def win(x, y):
-    gameDisplay.blit((win_bg), (x, y))
+def win(x, y, txt, colour):
+#    gameDisplay.blit((win_bg), (x, y))
+    win_font = pygame.font.SysFont("pixelmix Regular", 100)
+    text = win_font.render(txt, True, colour)
+    gameDisplay.blit((text), (x + 150, y + 200))
     
 
     
@@ -160,6 +169,8 @@ while not select:
         if event.type == pygame.QUIT:
             pygame.quit()
 #           sys.exit()
+          
+            
     cloud1(cl_x1 + 60, -100 + camera(x) + Tela - 2000)
     cloud1(cl_x1 + 600, 0 + camera(x) + Tela - 2000)
     cloud1(cl_x1 - 50, -150 + camera(x) + Tela - 1600)
@@ -190,7 +201,9 @@ while not select:
             select = True		
     else:
         gameDisplay.blit(start0,(400 - 65, 550 - 25))
-            
+        
+                 
+    
     pygame.display.update()
 
 
@@ -198,16 +211,18 @@ while not select:
 contadorFrames = 0
 
 w = -7
+back = False
 
 #condição p/ parar o jogo
 crashed = False
 
 #game loop
 while not crashed:
-    
+    click = pygame.mouse.get_pressed()
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
             crashed = True
+        
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_q and px < 400 and px > 0:
                 px += 5  
@@ -279,18 +294,53 @@ while not crashed:
     
     
     if px < 1:
+                
+        
         s = pygame.Surface((800,600))  # the size of your rect
         s.set_alpha(200)                # alpha level
         s.fill((255,255,255))           # this fills the entire surface
+        
+        if w > 3:
+            j = -0.0
+        if back:
+            j = -0.1
+            
         gameDisplay.blit(s, (0,600 + camera_win(w)))
-        w += 0.1
+        
+        win(-70, 600 + camera_win(w), "BLUE WINS!", (0,0,200))
+            
+        if 465 > mouse_pos[0] > 335 and 575 + 600 + camera_win(w) > mouse_pos[1] > 525 + 600 + camera_win(w):
+            gameDisplay.blit(start1,(335, 525 + 600 + camera_win(w)))	
+            if click[0] == 1:
+                back = True		
+        else:
+            gameDisplay.blit(start0,(335, 525 + 600 + camera_win(w)))
+        
+        
+        
+        w += j
         
     if px > 399:
         s = pygame.Surface((800,600))  # the size of your rect
         s.set_alpha(200)                # alpha level
         s.fill((255,255,255))           # this fills the entire surface
+        
+        if w > 3:
+            j = -0.0
+        if back:
+            j = -0.1
+            
         gameDisplay.blit(s, (0,600 + camera_win(w)))
-        w += 0.1
+        win(-30, 600 + camera_win(w), "RED WINS!", (200,0,0))
+        
+        if 465 > mouse_pos[0] > 335 and 575 + 600 + camera_win(w) > mouse_pos[1] > 525 + 600 + camera_win(w):
+            gameDisplay.blit(start1,(335, 525 + 600 + camera_win(w)))	
+            if click[0] == 1:
+                back = True		
+        else:
+            gameDisplay.blit(start0,(335, 525 + 600 + camera_win(w)))        
+        
+        w += j
         
     if contadorFrames > 30 and contadorFrames < 90:
         N3(400 - 200*0.5, 300 - 300*0.5)
