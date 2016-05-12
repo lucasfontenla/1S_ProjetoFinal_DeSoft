@@ -1,11 +1,15 @@
 import pygame
 import math
+import eztext
+import eztextNum
 
 
 pygame.init()
 
 display_width = 800
 display_height = 600
+
+
 
 cl_x1 = -60
 cl_x2 = 600
@@ -35,6 +39,7 @@ contadorBlue = 0
 contadorRed = 0
 
 intensityLevel = 0
+
 
 #class Thing:
 
@@ -71,16 +76,27 @@ start0 = pygame.image.load("CDG_Images/START_0.png")
 start0 = pygame.transform.scale(start0, (200, 200))
 start1 = pygame.image.load("CDG_Images/START_1.png")
 start1 = pygame.transform.scale(start1, (200, 200))
+localW = pygame.image.load("CDG_Images/Pixel_local_W.png")
+localW = pygame.transform.scale(localW, (600, 50))
+localY = pygame.image.load("CDG_Images/Pixel_local_Y.png")
+localY = pygame.transform.scale(localY, (600, 50))
+onlineW = pygame.image.load("CDG_Images/Pixel_online_W.png")
+onlineW = pygame.transform.scale(onlineW, (600, 50))
+onlineY = pygame.image.load("CDG_Images/Pixel_online_Y.png")
+onlineY = pygame.transform.scale(onlineY, (600, 50))
 n3 = pygame.image.load("CDG_Images/No_3.png")
 n3 = pygame.transform.scale(n3, (300, 300))
 n2 = pygame.image.load("CDG_Images/No_2.png")
 n2 = pygame.transform.scale(n2, (300, 300))
 n1 = pygame.image.load("CDG_Images/No_1.png")
 n1 = pygame.transform.scale(n1, (300, 300))
-win_bg = pygame.image.load("CDG_Images/White_Square50.png")
-win_bg = pygame.transform.scale(win_bg, (800, 600))
 win_font = pygame.font.SysFont("pixelmix Regular", 100)
 wintext = win_font.render("YOU WIN!", True, (0,0,0))
+
+
+bgLow = pygame.image.load("CDG_Images/new_background.png")
+bgHigh = pygame.image.load("CDG_Images/background_hard.png")
+bgInsane = pygame.image.load("CDG_Images/background_insane.png")
 
 #win_bg = pygame.Color.a(30)
 
@@ -120,8 +136,19 @@ def corda_d(x, y):
 def mountain_bg(x, y):
     gameDisplay.blit((mountain), (x, y))
     
+#def cloud1(x, y):
+#    gameDisplay.blit(pygame.transform.scale((pygame.image.load("CDG_Images/Pixel_cloud1.png")), (400, 400)), (x, y))
+    
 def cloud1(x, y):
-    gameDisplay.blit(pygame.transform.scale((pygame.image.load("CDG_Images/Pixel_cloud1.png")), (400, 400)), (x, y))
+    cld1 = pygame.image.load("CDG_Images/fred_cloud1.png")
+    cld1 = pygame.transform.flip(cld1, True, False)
+    cld1 = pygame.transform.scale((cld1), (500, 350))
+    gameDisplay.blit((cld1), (x, y))
+def cloud2(x, y):
+    cld1 = pygame.image.load("CDG_Images/fred_cloud2.png")
+    cld1 = pygame.transform.flip(cld1, True, False)
+    cld1 = pygame.transform.scale((cld1), (300, 150))
+    gameDisplay.blit((cld1), (x, y))
     
     
 def PM_bg(x, y):
@@ -141,8 +168,13 @@ def N1(x, y):
     
 def anyText(x, y, txt, colour):
     fonte = pygame.font.SysFont("pixelmix Regular", 20)
-    any = fonte.render(txt, True, colour)
-    gameDisplay.blit((any), (x, y))
+    ay = fonte.render(txt, True, colour)
+    gameDisplay.blit((ay), (x, y))
+    
+def anyText40(x, y, txt, colour):
+    fonte = pygame.font.SysFont("pixelmix Regular", 40)
+    ay = fonte.render(txt, True, colour)
+    gameDisplay.blit((ay), (x, y))
     
 def win(x, y, txt, colour):
 #    gameDisplay.blit((win_bg), (x, y))
@@ -163,6 +195,13 @@ def intensity(x, y, txt, lvl):
         fo = pygame.font.SysFont("pixelmix Regular", 50)
         inten = fo.render(txt, True, (100,0,0))
         gameDisplay.blit((inten), (x - 90, y - 10))
+        
+def bgLOW(x, y):
+    gameDisplay.blit((bgLow), (x, y))
+def bgHIGH(x, y):
+    gameDisplay.blit((bgHigh), (x, y))
+def bgINSANE(x, y):
+    gameDisplay.blit((bgInsane), (x, y))
 
     
 px = 200
@@ -171,7 +210,7 @@ px = 200
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 
 #Title
-pygame.display.set_caption("Cabo de Guerra")
+pygame.display.set_caption("Tug War - O melhor jogo do Brasil")
 
 #FPS
 clock = pygame.time.Clock()
@@ -188,22 +227,34 @@ def camera_win(x):
     
 x = -12
 
-select = False
+select0 = False
+select1 = False
+select10 = False
+select11 = False
+enter = False
 
-while not select:
-    gameDisplay.fill((9, 120, 236))
-    gameDisplay.blit(start0,(400 - 65, 550 - 25))
+pixelFont = pygame.font.SysFont("pixelmix Regular", 40)
+white = (255,255,255)
+question = eztextNum.Input(maxlength=20, color=white, prompt='IP: ')
+
+while not select0 or not select1:
+    gameDisplay.fill((121, 202, 249))
     mouse_pos = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-#           sys.exit()
+#            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SLASH:
+                enter = True
+
           
             
-    cloud1(cl_x3, -100 + camera(x) + Tela - 2000)
+    cloud2(cl_x3, -100 + camera(x) + Tela - 2000)
     cloud1(cl_x4, 0 + camera(x) + Tela - 2000)
-    cloud1(cl_x5, -150 + camera(x) + Tela - 1600)
+    cloud2(cl_x5, -150 + camera(x) + Tela - 1600)
     cloud1(cl_x6, 50 + camera(x) + Tela - 1600)
     
     cl_x1 += 0.3    
@@ -253,17 +304,216 @@ while not select:
     
             
             
-    TugWar(40 - TitleSize/3, -200 - TitleSize/3) 
-    if 400 - 65 + 130 > mouse_pos[0] > 400 - 65 and 575 > mouse_pos[1] > 550 - 25:
-        gameDisplay.blit(start1,(400 - 65, 550 - 25))	
-        if click[0] == 1:
-            select = True		
-    else:
-        gameDisplay.blit(start0,(400 - 65, 550 - 25))
-        
-                 
+    TugWar(40 - TitleSize/3, -200 - TitleSize/3)
     
+    if select1 == False and 300 > mouse_pos[0] > 120 and 570 > mouse_pos[1] > 520:
+        gameDisplay.blit(localY,(120, 520))	
+        if click[0] == 1:
+            select0 = True
+            break
+    elif select1 == False:
+        gameDisplay.blit(localW,(120, 520))
+        
+    if select1 == False and 700 > mouse_pos[0] > 500 and 570 > mouse_pos[1] > 520:
+        gameDisplay.blit(onlineY,(500, 520))	
+        if click[0] == 1:
+            select1 = True
+            break
+    elif select1 == False:
+        gameDisplay.blit(onlineW,(500, 520))
+    
+
     pygame.display.update()
+    
+    
+    
+    
+    
+while select1:
+    gameDisplay.fill((121, 202, 249))
+    mouse_pos = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+#            sys.exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SLASH:
+                enter = True
+            
+    if enter:
+        print("oi")
+          
+            
+    cloud2(cl_x3, -100 + camera(x) + Tela - 2000)
+    cloud1(cl_x4, 0 + camera(x) + Tela - 2000)
+    cloud2(cl_x5, -150 + camera(x) + Tela - 1600)
+    cloud1(cl_x6, 50 + camera(x) + Tela - 1600)
+    
+    cl_x1 += 0.3    
+    cl_x2 += 0.3
+    cl_x3 += 0.3    
+    cl_x4 += 0.3
+    cl_x5 += 0.3
+    cl_x6 += 0.3
+    cl_x7 += 0.3
+    cl_x8 += 0.3
+    cl_x9 += 0.3
+    cl_x10 += 0.3
+    cl_x11 += 0.3
+    cl_x12 += 0.3
+    
+    if cl_x1 > 805:
+        cl_x1 = -400
+    if cl_x2 > 805:
+        cl_x2 = -400
+    if cl_x3 > 805:
+        cl_x3 = -400
+    if cl_x4 > 805:
+        cl_x4 = -400
+    if cl_x5 > 805:
+        cl_x5 = -400
+    if cl_x6 > 805:
+        cl_x6 = -400
+    if cl_x7 > 805:
+        cl_x7 = -400
+    if cl_x8 > 805:
+        cl_x8 = -400
+    if cl_x9 > 805:
+        cl_x9 = -400
+    if cl_x10 > 805:
+        cl_x10 = -400
+    if cl_x11 > 805:
+        cl_x11 = -400
+    if cl_x12 > 805:
+        cl_x12 = -400
+        
+    
+    Tug = pygame.image.load("CDG_Images/Tug_War.png")
+    Tug = pygame.transform.scale(Tug, (800 + TitleSize, 800 + TitleSize))
+            
+    TitleSize = int((15*(1+math.sin(2*3.14*n*0.01)))*0.5)
+    n -= 1
+    
+            
+            
+    TugWar(40 - TitleSize/3, -200 - TitleSize/3)
+    
+
+    
+#    gameDisplay.blit(onlineW,(300, 520))
+        
+    if select11 == False and 300 > mouse_pos[0] > 120 and 570 > mouse_pos[1] > 520:
+        anyText40(120, 520, "CREATE", (255,255,0))	
+        if click[0] == 1:
+            select10 = True		
+    elif select11 == False:
+        anyText40(120, 520, "CREATE", (255,255,255))	
+            
+    if select11 == False and 700 > mouse_pos[0] > 500 and 570 > mouse_pos[1] > 520:
+        anyText40(500, 520, "JOIN", (255,255,0))	
+        if click[0] == 1:
+            select11 = True		
+    elif select11 == False:
+        anyText40(500, 520, "JOIN", (255,255,255))            
+        
+    if select11 == True:
+        question.set_pos(200, 520)
+        question.set_font(pixelFont)
+        question.draw(gameDisplay)
+        question.update(pygame.event.get())
+        print(question.value)
+        if question.enter:
+            pesquisarIP = True
+               
+            select0 = True
+            break
+
+    pygame.display.update()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+#select = False
+#
+#while not select:
+#    gameDisplay.fill((121, 202, 249))
+#    mouse_pos = pygame.mouse.get_pos()
+#    click = pygame.mouse.get_pressed()
+#    for event in pygame.event.get():
+#        if event.type == pygame.QUIT:
+#            pygame.quit()
+##           sys.exit()
+#          
+#            
+#    cloud1(cl_x3, -100 + camera(x) + Tela - 2000)
+#    cloud1(cl_x4, 0 + camera(x) + Tela - 2000)
+#    cloud1(cl_x5, -150 + camera(x) + Tela - 1600)
+#    cloud1(cl_x6, 50 + camera(x) + Tela - 1600)
+#    
+#    cl_x1 += 0.3    
+#    cl_x2 += 0.3
+#    cl_x3 += 0.3    
+#    cl_x4 += 0.3
+#    cl_x5 += 0.3
+#    cl_x6 += 0.3
+#    cl_x7 += 0.3
+#    cl_x8 += 0.3
+#    cl_x9 += 0.3
+#    cl_x10 += 0.3
+#    cl_x11 += 0.3
+#    cl_x12 += 0.3
+#    
+#    if cl_x1 > 805:
+#        cl_x1 = -400
+#    if cl_x2 > 805:
+#        cl_x2 = -400
+#    if cl_x3 > 805:
+#        cl_x3 = -400
+#    if cl_x4 > 805:
+#        cl_x4 = -400
+#    if cl_x5 > 805:
+#        cl_x5 = -400
+#    if cl_x6 > 805:
+#        cl_x6 = -400
+#    if cl_x7 > 805:
+#        cl_x7 = -400
+#    if cl_x8 > 805:
+#        cl_x8 = -400
+#    if cl_x9 > 805:
+#        cl_x9 = -400
+#    if cl_x10 > 805:
+#        cl_x10 = -400
+#    if cl_x11 > 805:
+#        cl_x11 = -400
+#    if cl_x12 > 805:
+#        cl_x12 = -400
+#
+#    if 300 > mouse_pos[0] > 120 and 570 > mouse_pos[1] > 520:
+#        gameDisplay.blit(localY,(120, 520))	
+#        if click[0] == 1:
+#            select = True		
+#    else:
+#        gameDisplay.blit(localW,(120, 520))
+#        
+#    if 700 > mouse_pos[0] > 500 and 570 > mouse_pos[1] > 520:
+#        gameDisplay.blit(onlineY,(500, 520))	
+#        if click[0] == 1:
+#            select = True
+#            eztext.Input.update()
+#    else:
+#        gameDisplay.blit(onlineW,(500, 520))
+#        
+#                 
+#    
+#    pygame.display.update()
 
 
 ######################################################################################################
@@ -277,15 +527,15 @@ crashed = False
 
 valorPress = 0
 
-bg_color = ((9, 120, 236))
+bg_color = ((121, 202, 249))
 
 #game loop
-while not crashed:
+while select0:
     click = pygame.mouse.get_pressed()
     mouse_pos = pygame.mouse.get_pos()
     for ev in pygame.event.get():
         if ev.type == pygame.QUIT:
-            crashed = True
+            select0 = False
         
         if ev.type == pygame.KEYDOWN:
             if ev.key == pygame.K_q and px < 400 and px > 0:
@@ -301,20 +551,27 @@ while not crashed:
             
     gameDisplay.fill(bg_color)
     
+    if contadorFrames > 600:
+        bgINSANE(0, 0 + camera(x) + Tela)
+    elif contadorFrames > 400:
+        bgHIGH(0, 0 + camera(x) + Tela)
+    else:
+        bgLOW(0, 0 + camera(x) + Tela)
+    
     mountain_bg(-30, 400 + camera(x) + Tela)
     
 
-    cloud1(cl_x3, -100 + camera(x) + Tela - 2000)
+    cloud2(cl_x3, -100 + camera(x) + Tela - 2000)
     cloud1(cl_x4, 0 + camera(x) + Tela - 2000)
-    cloud1(cl_x5, -150 + camera(x) + Tela - 1600)
+    cloud2(cl_x5, -150 + camera(x) + Tela - 1600)
     cloud1(cl_x6, 50 + camera(x) + Tela - 1600)
-    cloud1(cl_x7, -250 + camera(x) + Tela - 1200)
+    cloud2(cl_x7, -250 + camera(x) + Tela - 1200)
     cloud1(cl_x8, 0 + camera(x) + Tela - 1200)
-    cloud1(cl_x9, -150 + camera(x) + Tela - 800)
+    cloud2(cl_x9, -150 + camera(x) + Tela - 800)
     cloud1(cl_x10, 50 + camera(x) + Tela - 800)
-    cloud1(cl_x11, -50 + camera(x) + Tela - 400)
+    cloud2(cl_x11, -50 + camera(x) + Tela - 400)
     cloud1(cl_x12, 100 + camera(x) + Tela - 400)
-    cloud1(cl_x1, -50 + camera(x) + Tela)
+    cloud2(cl_x1, -50 + camera(x) + Tela)
     cloud1(cl_x2, 0 + camera(x) + Tela)
     
     cl_x1 += 0.3    
@@ -400,7 +657,7 @@ while not crashed:
     elif 210 < contadorFrames:
         ilevel = "LOW"
         intensityLevel = 0
-        bg_color = (9, 120, 236)
+        bg_color = (121, 202, 249)
         valorPress = 5
     else:
         ilevel = "NONE"
