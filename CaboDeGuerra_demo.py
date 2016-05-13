@@ -1,7 +1,7 @@
 import pygame
 import math
-import eztext
-import eztextNum
+#import eztext
+#import eztextNum
 
 
 pygame.init()
@@ -76,14 +76,14 @@ start0 = pygame.image.load("CDG_Images/START_0.png")
 start0 = pygame.transform.scale(start0, (200, 200))
 start1 = pygame.image.load("CDG_Images/START_1.png")
 start1 = pygame.transform.scale(start1, (200, 200))
-localW = pygame.image.load("CDG_Images/Pixel_local_W.png")
-localW = pygame.transform.scale(localW, (600, 50))
-localY = pygame.image.load("CDG_Images/Pixel_local_Y.png")
-localY = pygame.transform.scale(localY, (600, 50))
-onlineW = pygame.image.load("CDG_Images/Pixel_online_W.png")
-onlineW = pygame.transform.scale(onlineW, (600, 50))
-onlineY = pygame.image.load("CDG_Images/Pixel_online_Y.png")
-onlineY = pygame.transform.scale(onlineY, (600, 50))
+#localW = pygame.image.load("CDG_Images/Pixel_local_W.png")
+#localW = pygame.transform.scale(localW, (600, 50))
+#localY = pygame.image.load("CDG_Images/Pixel_local_Y.png")
+#localY = pygame.transform.scale(localY, (600, 50))
+#onlineW = pygame.image.load("CDG_Images/Pixel_online_W.png")
+#onlineW = pygame.transform.scale(onlineW, (600, 50))
+#onlineY = pygame.image.load("CDG_Images/Pixel_online_Y.png")
+#onlineY = pygame.transform.scale(onlineY, (600, 50))
 n3 = pygame.image.load("CDG_Images/No_3.png")
 n3 = pygame.transform.scale(n3, (300, 300))
 n2 = pygame.image.load("CDG_Images/No_2.png")
@@ -145,7 +145,7 @@ def cloud1(x, y):
     cld1 = pygame.transform.scale((cld1), (500, 350))
     gameDisplay.blit((cld1), (x, y))
 def cloud2(x, y):
-    cld1 = pygame.image.load("CDG_Images/fred_cloud2.png")
+#    cld1 = pygame.image.load("CDG_Images/fred_cloud2.png")
     cld1 = pygame.transform.flip(cld1, True, False)
     cld1 = pygame.transform.scale((cld1), (300, 150))
     gameDisplay.blit((cld1), (x, y))
@@ -235,7 +235,7 @@ enter = False
 
 pixelFont = pygame.font.SysFont("pixelmix Regular", 40)
 white = (255,255,255)
-question = eztextNum.Input(maxlength=20, color=white, prompt='IP: ')
+#question = eztextNum.Input(maxlength=20, color=white, prompt='IP: ')
 
 while not select0 or not select1:
     gameDisplay.fill((121, 202, 249))
