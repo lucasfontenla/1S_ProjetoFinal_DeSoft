@@ -99,30 +99,3 @@ class Client():
 
 	def dataTreatment(self, value):
 		pass
-
-client = Client()
-client.serverHost('10.92.41.192')
-client.setName('A')
-value = client.clientStart()
-if value == 'done: principal':
-	time.sleep(30)
-	client.closeConnection()
-	print(client.connection_status)
-	client.getMyTeam()
-	print(client.myTeam())
-	client.StartGame()
-	for i in range(0, 2000):
-		client.sendPackages(1*(1.1**i))
-		print(client.recivePoints())
-		time.sleep(0.05)
-	client.stopReceiving()
-else:
-	print(client.connection_status)
-	client.getMyTeam()
-	print(client.myTeam())
-	client.waitStart()
-	for i in range(0, 2000):
-		client.sendPackages(1)
-		print(client.recivePoints())
-		time.sleep(0.05)
-	client.stopReceiving()	
