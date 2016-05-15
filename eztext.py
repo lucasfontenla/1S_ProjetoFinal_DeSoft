@@ -29,6 +29,7 @@ class Input:
         self.maxlength = self.options.maxlength
         self.prompt = self.options.prompt; self.value = ''
         self.shifted = False
+        self.enter = False
 
     def set_pos(self, x, y):
         """ Set the position to x, y """
@@ -47,12 +48,15 @@ class Input:
     def update(self, events):
         """ Update the input based on passed events """
         for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
             if event.type == KEYUP:
                 if event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = False
             if event.type == KEYDOWN:
                 if event.key == K_BACKSPACE: self.value = self.value[:-1]
                 elif event.key == K_LSHIFT or event.key == K_RSHIFT: self.shifted = True
                 elif event.key == K_SPACE: self.value += ' '
+                elif event.key == K_RETURN: self.enter = True               
                 if not self.shifted:
                     if event.key == K_a and 'a' in self.restricted: self.value += 'a'
                     elif event.key == K_b and 'b' in self.restricted: self.value += 'b'
