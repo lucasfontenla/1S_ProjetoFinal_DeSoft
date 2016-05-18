@@ -7,19 +7,25 @@ class Client():
 	def __init__(self):
 		self.port = 80
 
-	def showMyHost(self):
-		return [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][1]
+	def showMyHost(self): 
+		try:
+			IP = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][1] #arrumar para todos pcs try except
+		except:
+			IP = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]
+		return IP
 
-	def setHost(self, serverIP):
+	def setHost(self, serverIP): #OK
 		self.hostServer = serverIP
 
-	def setName(self, name):
+	def setName(self, name): #OK
 		self.Name = name
 
-	def clientStart(self):
+	def clientStart(self): #OK
 		self.connection_status = 'none'
 		self.clientTCP = socket.socket()
-		self.clientTCP.connect((self.hostServer, self.port))
+		try:
+			self.clientTCP.connect((self.hostServer, self.port))
+		except: pass
 
 		self.clientTCP.setblocking(0)
 		timeout0 = time.clock()
@@ -47,7 +53,7 @@ class Client():
 						pass
 
 		if timeout:
-			self.checkStatus('Error 001 Timeout: could not connect to server in time')
+			self.checkStatus('Timeout')
 			return 'timeout'
 		else:
 			if self.connection_status == 'Connected as principal':
@@ -74,6 +80,7 @@ class Client():
 		self.clientTCP.send('close'.encode())
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------		
 	def sendMyTeam(self, team): #blue, red or random
+		self.myteam = 'none'
 		print('Waiting to send my team...')	
 		while True:
 			try:

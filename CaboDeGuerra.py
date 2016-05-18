@@ -1,5 +1,10 @@
 import pygame, math, eztext, eztextNum, os
-#from Servidor.UDPgameClient import Client 
+from Servidor.gameClient import Client 
+#from Servidor.gameServer import Server
+from threading import Thread  
+
+client = Client()
+
 pygame.init()
 
 display_width = 800
@@ -18,41 +23,42 @@ intro = 0
 
 alp = 255
 
+
 def func(x):
     fun = 255*(1/(1 + math.e**-(0.05*x)))
     return fun
 
-while True:
-    gameDisplay.fill((0,0,0))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-    
-    introSize = int(intro*0.3)    
-        
-    introText = pygame.image.load("CDG_Images/intro.png")
-    introText = pygame.transform.scale(introText, (500 + introSize, 250 + int(introSize/2)))
-    gameDisplay.blit((introText), (190 - int(introSize/2), 250 - int(introSize/6)))
-    
-    
-    si = pygame.Surface((800,600))  # the size of your rect
-    si.set_alpha(alp - func(intro - 100))               # alpha level
-    si.fill((0,0,0))
-    su = pygame.Surface((800,600))  # the size of your rect
-    su.set_alpha(func(intro - 250))               # alpha level
-    su.fill((0,0,0))
-            
-    gameDisplay.blit(si, (0,0))    
-    gameDisplay.blit(su, (0,0))
-
-            
-    intro += 1
-            
-    if intro > 60*6:
-        break
-    
-    clock.tick(60)
-    pygame.display.update()
+#while True:
+#    gameDisplay.fill((0,0,0))
+#    for event in pygame.event.get():
+#        if event.type == pygame.QUIT:
+#            pygame.quit()
+#    
+#    introSize = int(intro*0.3)
+#        
+#    introText = pygame.image.load("CDG_Images/intro.png")
+#    introText = pygame.transform.scale(introText, (500 + introSize, 250 + int(introSize/2)))
+#    gameDisplay.blit((introText), (190 - int(introSize/2), 250 - int(introSize/6)))
+#    
+#    
+#    si = pygame.Surface((800,600))  # the size of your rect
+#    si.set_alpha(alp - func(intro - 100))               # alpha level
+#    si.fill((0,0,0))
+#    su = pygame.Surface((800,600))  # the size of your rect
+#    su.set_alpha(func(intro - 250))               # alpha level
+#    su.fill((0,0,0))
+#            
+#    gameDisplay.blit(si, (0,0))    
+#    gameDisplay.blit(su, (0,0))
+#
+#            
+#    intro += 1
+#            
+#    if intro > 60*6:
+#        break
+#    
+#    clock.tick(60)
+#    pygame.display.update()
 
 
 
@@ -96,6 +102,11 @@ while True:
     nome = None
     ip = None
     
+    cont = False
+    
+    
+        
+    
     
     #class Thing:
     
@@ -108,14 +119,14 @@ while True:
     #        gameDisplay.blit(self.img, position)
     #        
     #função de personagem
-    def character(img, position, orientation):
+    def character(img, orientation):
     #    Thing.Object(img, position, 0, orientation)
         im = pygame.image.load(img)
         if orientation == left:
             im = pygame.transform.flip(im, True, False)
     #    if size != original:
     #        self.img = pygame.transform.scale(self.img, size)
-        gameDisplay.blit(im, position)    
+#        gameDisplay.blit(im, position)    
         
             
     #load das imagens da corda
@@ -234,65 +245,110 @@ while True:
         surf = pygame.transform.smoothscale(surface, scale_size)
         surf = pygame.transform.smoothscale(surf, surf_size)
         return surf
-
+        
+    
     
     #funções para inserir cada jogador virado para a direita na tela
-    def p_marrom1(x, y):
-        character("CDG_Images/char1.1.png", (x, y), right)
-    def p_amarelo1(x, y):
-        character("CDG_Images/char2.1.png", (x, y), right)
-    def p_rosa1(x, y):
-        character("CDG_Images/char3.1.png", (x, y), right)
-    def p_marrom2(x, y):
-        character("CDG_Images/char1.2.png", (x, y), right)
-    def p_amarelo2(x, y):
-        character("CDG_Images/char2.2.png", (x, y), right)
-    def p_rosa2(x, y):
-        character("CDG_Images/char3.2.png", (x, y), right)
-    def p_marrom1d(x, y):
-        character("CDG_Images/char1.3.png", (x, y), right)
-    def p_amarelo1d(x, y):
-        character("CDG_Images/char2.3.png", (x, y), right)
-    def p_rosa1d(x, y):
-        character("CDG_Images/char3.3.png", (x, y), right)
-    def p_marrom2d(x, y):
-        character("CDG_Images/char1.4.png", (x, y), right)
-    def p_amarelo2d(x, y):
-        character("CDG_Images/char2.4.png", (x, y), right)
-    def p_rosa2d(x, y):
-        character("CDG_Images/char3.4.png", (x, y), right)
-    def p_fred1(x, y):
-        character("CDG_Images/char10.1.png", (x, y), right)
-    def p_fred2(x, y):
-        character("CDG_Images/char10.2.png", (x, y), right)
-    def p_fred1d(x, y):
-        character("CDG_Images/char10.3.png", (x, y), right)
-    def p_fred2d(x, y):
-        character("CDG_Images/char10.4.png", (x, y), right)
-    def p_gui1(x, y):
-        character("CDG_Images/char12.1.png", (x, y), right)
-    def p_gui2(x, y):
-        character("CDG_Images/char12.2.png", (x, y), right)
-    def p_gui1d(x, y):
-        character("CDG_Images/char12.3.png", (x, y), right)
-    def p_gui2d(x, y):
-        character("CDG_Images/char12.4.png", (x, y), right)
-    def p_ayres1(x, y):
-        character("CDG_Images/char5.1.png", (x, y), right)
-    def p_ayres2(x, y):
-        character("CDG_Images/char5.2.png", (x, y), right)
-    def p_ayres1d(x, y):
-        character("CDG_Images/char5.3.png", (x, y), right)
-    def p_ayres2d(x, y):
-        character("CDG_Images/char5.4.png", (x, y), right)
-    def p_hage1(x, y):
-        character("CDG_Images/char6.1.png", (x, y), right)
-    def p_hage2(x, y):
-        character("CDG_Images/char6.2.png", (x, y), right)
-    def p_hage1d(x, y):
-        character("CDG_Images/char6.3.png", (x, y), right)
-    def p_hage2d(x, y):
-        character("CDG_Images/char6.4.png", (x, y), right)
+
+    marrom1 = pygame.image.load("CDG_Images/char1.1.png")
+    marrom2 = pygame.image.load("CDG_Images/char1.2.png")
+    marrom3 = pygame.image.load("CDG_Images/char1.3.png")
+    marrom4 = pygame.image.load("CDG_Images/char1.4.png")
+    amarelo1 = pygame.image.load("CDG_Images/char2.1.png")
+    amarelo2 = pygame.image.load("CDG_Images/char2.2.png")
+    amarelo3 = pygame.image.load("CDG_Images/char2.3.png")
+    amarelo4 = pygame.image.load("CDG_Images/char2.4.png")
+    rosa1 = pygame.image.load("CDG_Images/char3.1.png")
+    rosa2 = pygame.image.load("CDG_Images/char3.2.png")
+    rosa3 = pygame.image.load("CDG_Images/char3.3.png")
+    rosa4 = pygame.image.load("CDG_Images/char3.4.png")
+    fred1 = pygame.image.load("CDG_Images/char10.1.png")
+    fred2 = pygame.image.load("CDG_Images/char10.2.png")
+    fred3 = pygame.image.load("CDG_Images/char10.3.png")
+    fred4 = pygame.image.load("CDG_Images/char10.4.png")
+    gui1 = pygame.image.load("CDG_Images/char12.1.png")
+    gui2 = pygame.image.load("CDG_Images/char12.2.png")
+    gui3 = pygame.image.load("CDG_Images/char12.3.png")
+    gui4 = pygame.image.load("CDG_Images/char12.4.png")
+
+        
+    marrom = [marrom1, marrom2, marrom3, marrom4]
+    rosa = [rosa1, rosa2, rosa3, rosa4]
+    amarelo = [amarelo1, amarelo2, amarelo3, amarelo4]
+    fred = [fred1, fred2, fred3, fred4]        
+    gui = [gui1, gui2, gui3, gui4]
+        
+    def p_ayres1():
+        character("CDG_Images/char5.1.png", right)
+    def p_ayres2():
+        character("CDG_Images/char5.2.png", right)
+    def p_ayres1d():
+        character("CDG_Images/char5.3.png", right)
+    def p_ayres2d():
+        character("CDG_Images/char5.4.png", right)
+        
+    ayres = [p_ayres1(), p_ayres2(), p_ayres1d(), p_ayres2d()]
+        
+    def p_hage1():
+        character("CDG_Images/char6.1.png", right)
+    def p_hage2():
+        character("CDG_Images/char6.2.png", right)
+    def p_hage1d():
+        character("CDG_Images/char6.3.png", right)
+    def p_hage2d():
+        character("CDG_Images/char6.4.png", right)
+        
+    hage = [p_hage1(), p_hage2(), p_hage1d(), p_hage2d()]
+        
+    def p_super1(x, y):
+        character("CDG_Images/char11.1.png", (x, y), right)
+    def p_super2(x, y):
+        character("CDG_Images/char11.2.png", (x, y), right)
+    def p_super1d(x, y):
+        character("CDG_Images/char11.3.png", (x, y), right)
+    def p_super2d(x, y):
+        character("CDG_Images/char11.4.png", (x, y), right)
+    def p_jerry1(x, y):
+        character("CDG_Images/char4.1.png", (x, y), right)
+    def p_jerry2(x, y):
+        character("CDG_Images/char4.2.png", (x, y), right)
+    def p_jerry1d(x, y):
+        character("CDG_Images/char4.3.png", (x, y), right)
+    def p_jerry2d(x, y):
+        character("CDG_Images/char4.4.png", (x, y), right)
+    def p_goku1(x, y):
+        character("CDG_Images/char13.1.png", (x, y), right)
+    def p_goku2(x, y):
+        character("CDG_Images/char13.2.png", (x, y), right)
+    def p_goku1d(x, y):
+        character("CDG_Images/char13.3.png", (x, y), right)
+    def p_goku2d(x, y):
+        character("CDG_Images/char13.4.png", (x, y), right)
+    def p_batman1(x, y):
+        character("CDG_Images/char7.1.png", (x, y), right)
+    def p_batman2(x, y):
+        character("CDG_Images/char7.2.png", (x, y), right)
+    def p_batman1d(x, y):
+        character("CDG_Images/char7.3.png", (x, y), right)
+    def p_batman2d(x, y):
+        character("CDG_Images/char7.4.png", (x, y), right)
+    def p_leprechon1(x, y):
+        character("CDG_Images/char8.1.png", (x, y), right)
+    def p_leprechon2(x, y):
+        character("CDG_Images/char8.2.png", (x, y), right)
+    def p_leprechon1d(x, y):
+        character("CDG_Images/char8.3.png", (x, y), right)
+    def p_leprechon2d(x, y):
+        character("CDG_Images/char8.4.png", (x, y), right)
+    def p_obama1(x, y):
+        character("CDG_Images/char14.1.png", (x, y), right)
+    def p_obama2(x, y):
+        character("CDG_Images/char14.2.png", (x, y), right)
+    def p_obama1d(x, y):
+        character("CDG_Images/char14.3.png", (x, y), right)
+    def p_obama2d(x, y):
+        character("CDG_Images/char14.4.png", (x, y), right)
+    
     
     #funções para inserir cada jogador virado para a esquerda na tela
     def p_marrom10(x, y):
@@ -328,13 +384,13 @@ while True:
     def p_fred20d(x, y):
         character("CDG_Images/char10.4.png", (x, y), left)
     def p_gui10(x, y):
-        character("CDG_Images/char12.1.png", (x, y), left)
+        character("CDG_Images/char12.1.png", left)
     def p_gui20(x, y):
-        character("CDG_Images/char12.2.png", (x, y), left)
+        character("CDG_Images/char12.2.png", left)
     def p_gui10d(x, y):
-        character("CDG_Images/char12.3.png", (x, y), left)
+        character("CDG_Images/char12.3.png", left)
     def p_gui20d(x, y):
-        character("CDG_Images/char12.4.png", (x, y), left)
+        character("CDG_Images/char12.4.png", left)
     def p_ayres10(x, y):
         character("CDG_Images/char5.1.png", (x, y), left)
     def p_ayres20(x, y):
@@ -351,6 +407,55 @@ while True:
         character("CDG_Images/char6.3.png", (x, y), left)
     def p_hage20d(x, y):
         character("CDG_Images/char6.4.png", (x, y), left)
+        
+    def p_super10(x, y):
+        character("CDG_Images/char11.1.png", (x, y), left)
+    def p_super20(x, y):
+        character("CDG_Images/char11.2.png", (x, y), left)
+    def p_super10d(x, y):
+        character("CDG_Images/char11.3.png", (x, y), left)
+    def p_super20d(x, y):
+        character("CDG_Images/char11.4.png", (x, y), left)
+    def p_jerry10(x, y):
+        character("CDG_Images/char4.1.png", (x, y), left)
+    def p_jerry20(x, y):
+        character("CDG_Images/char4.2.png", (x, y), left)
+    def p_jerry10d(x, y):
+        character("CDG_Images/char4.3.png", (x, y), left)
+    def p_jerry20d(x, y):
+        character("CDG_Images/char4.4.png", (x, y), left)
+    def p_goku10(x, y):
+        character("CDG_Images/char13.1.png", (x, y), left)
+    def p_goku20(x, y):
+        character("CDG_Images/char13.2.png", (x, y), left)
+    def p_goku10d(x, y):
+        character("CDG_Images/char13.3.png", (x, y), left)
+    def p_goku20d(x, y):
+        character("CDG_Images/char13.4.png", (x, y), left)
+    def p_batman10(x, y):
+        character("CDG_Images/char7.1.png", (x, y), left)
+    def p_batman20(x, y):
+        character("CDG_Images/char7.2.png", (x, y), left)
+    def p_batman10d(x, y):
+        character("CDG_Images/char7.3.png", (x, y), left)
+    def p_batman20d(x, y):
+        character("CDG_Images/char7.4.png", (x, y), left)
+    def p_leprechon10(x, y):
+        character("CDG_Images/char8.1.png", (x, y), left)
+    def p_leprechon20(x, y):
+        character("CDG_Images/char8.2.png", (x, y), left)
+    def p_leprechon10d(x, y):
+        character("CDG_Images/char8.3.png", (x, y), left)
+    def p_leprechon20d(x, y):
+        character("CDG_Images/char8.4.png", (x, y), left)
+    def p_obama10(x, y):
+        character("CDG_Images/char14.1.png", (x, y), left)
+    def p_obama20(x, y):
+        character("CDG_Images/char14.2.png", (x, y), left)
+    def p_obama10d(x, y):
+        character("CDG_Images/char14.3.png", (x, y), left)
+    def p_obama20d(x, y):
+        character("CDG_Images/char14.4.png", (x, y), left)
         
     #funções para inserir cada imagem da corda na tela
     def corda_i(x, y):
@@ -419,12 +524,32 @@ while True:
         cld1 = pygame.image.load("CDG_Images/fred_cloud1.png")
         cld1 = pygame.transform.flip(cld1, True, False)
         cld1 = pygame.transform.scale((cld1), (500, 350))
-        gameDisplay.blit(blurSurf(cld1, blurInt), (x, y))
+        gameDisplay.blit(cld1, (x, y))
     def cloud2(x, y):
         cld1 = pygame.image.load("CDG_Images/fred_cloud2.png")
         cld1 = pygame.transform.flip(cld1, True, False)
         cld1 = pygame.transform.scale((cld1), (300, 150))
-        gameDisplay.blit(blurSurf(cld1, blurInt), (x, y))
+        gameDisplay.blit(cld1, (x, y))
+    def cloud11(x, y):
+        cld1 = pygame.image.load("CDG_Images/fred_cloud3.png")
+        cld1 = pygame.transform.flip(cld1, True, False)
+        cld1 = pygame.transform.scale((cld1), (500, 350))
+        gameDisplay.blit(cld1, (x - 10, y + 20))
+    def cloud21(x, y):
+        cld1 = pygame.image.load("CDG_Images/fred_cloud4.png")
+        cld1 = pygame.transform.flip(cld1, True, False)
+        cld1 = pygame.transform.scale((cld1), (300, 150))
+        gameDisplay.blit(cld1, (x - 10, y + 20))
+    def cloud12(x, y):
+        cld1 = pygame.image.load("CDG_Images/fred_cloud6.png")
+        cld1 = pygame.transform.flip(cld1, True, False)
+        cld1 = pygame.transform.scale((cld1), (500, 350))
+        gameDisplay.blit(cld1, (x - 10, y + 20))
+    def cloud22(x, y):
+        cld1 = pygame.image.load("CDG_Images/fred_cloud5.png")
+        cld1 = pygame.transform.flip(cld1, True, False)
+        cld1 = pygame.transform.scale((cld1), (300, 150))
+        gameDisplay.blit(cld1, (x - 10, y + 20))
         
     #função para inserir o QZ e o PM na tela        
     def PM_bg(x, y):
@@ -485,6 +610,7 @@ while True:
         gameDisplay.blit((bgHigh), (x, y))
     def bgINSANE(x, y):
         gameDisplay.blit((bgInsane), (x, y))
+
     
     #Valor inicial da barra de progresso
     px = 200
@@ -515,6 +641,11 @@ while True:
     team = ''
     selectTeam = False
     frameCounter = 0
+    
+    personagem_pos1x = 185,206 + 25 + camera(x) *1.5 + 1000 + Tela  +  TitleSize/2
+    personagem_pos1y = 185,206 + 25 + camera(x) *1.5 + 1000 + Tela  +  TitleSize/2
+    personagem_pos2x = 567, 206 + 25 + camera(x) *1.5 + 1000 + Tela  +  TitleSize/2
+    personagem_pos2y = 567, 206 + 25 + camera(x) *1.5 + 1000 + Tela  +  TitleSize/2
     
     pixelFont = pygame.font.SysFont("pixelmix Regular", 40)
     white = (255,255,255)
@@ -613,8 +744,9 @@ while True:
         elif select1 == False:
             gameDisplay.blit(onlineW,(500, 520))
             
-        blackout = pygame.image.load("CDG_Images/blackout.png")
-        gameDisplay.blit(blackout, (-200 + frameCounter*30 ,0))
+        if frameCounter < 300:
+            blackout = pygame.image.load("CDG_Images/blackout.png")
+            gameDisplay.blit(blackout, (-200 + frameCounter*30 ,0))
         
         if select1 == True:
             name.set_pos(100, 520)
@@ -626,6 +758,7 @@ while True:
             
             if name.enter:
                 nome = name.value
+                client.setName(nome)
                 name.enter = False
                 break
             
@@ -702,7 +835,7 @@ while True:
         n -= 1
         
                 
-                
+              
         TugWar(40 - TitleSize/3, -200 - TitleSize/3)
         
     
@@ -729,7 +862,7 @@ while True:
                 click1 = False
                 
         elif select11 == False:
-            anyText40(500, 520, "JOIN", (255,255,255))            
+            anyText40(500, 520, "JOIN", (255,255,255))        
         
         #Tela para inserir IP
         if select11 == True:
@@ -742,13 +875,41 @@ while True:
             if question.enter:
                 pesquisarIP = True
                 ip = question.value
+                client.setHost(ip)
                 
-                select0 = True
-                break
+                oi = 0
+                
+                while True:
+                    if oi == 0:
+                        def start():
+                            client.clientStart()
+                        t1 = Thread(target = start)
+                        t1.start()
+                    
+                    anyText40(200, 300, "Searching Server...", (255,255,255))
+                    
+                    if client.connection_status == 'Connected' or client.connection_status == 'Connected as principal':
+                        timeout = False
+                        break
+                    elif client.connection_status == 'Timeout':
+                        timeout = True
+                        break
+                        
+                    
+                    oi = 1
+                    
+                    pygame.display.update()
+                
+#                question.enter = False
+                
+                if not timeout:
+                    select0 = True
+                    break
+                
     
         pygame.display.update()
         
-    ##############################################################
+###############################################################################
         
     #loop CREATE
     while select10:
@@ -807,69 +968,82 @@ while True:
             cl_x11 = -400
         if cl_x12 > 805:
             cl_x12 = -400
-            
+        
+        if cont == False:
+            anyText40(250, 100, 'IP: {0}'.format(client.showMyHost()), (255, 255, 255))
+        
+        if cont == False and 650 > mouse_pos[0] > 510 and 500 > mouse_pos[1] > 450:
+            anyText40(510, 450, "GO TO LOBBY", (255,255,0))	
+            if click1:
+                cont = True
+                click1 = False
+                
+        elif cont == False:
+            anyText40(510, 450, "GO TO LOBBY", (255,255,255))	
 
         team = 'blue'
+        
+        if cont:
     
-        anyText40(230, 10, "CREATE GAME", (255, 255, 255))
-        anyText40(420, 100, 'IP: 192.168.1.1', (255, 255, 255))
+            anyText40(230, 10, "CREATE GAME", (255, 255, 255))
+            anyText40(420, 100, 'IP: 192.168.1.1', (255, 255, 255))
+            
+            rectHeight = 25
+            rectWidth = 300
+            
+            pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 0*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 1*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 2*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 3*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 4*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 5*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 6*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 7*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 8*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 9*rectHeight,rectWidth, rectHeight), 0)
+            
+            pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 10*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 11*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 12*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 13*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 14*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 15*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 16*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 17*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 18*rectHeight,rectWidth, rectHeight), 0)
+            pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 19*rectHeight,rectWidth, rectHeight), 0)
+            
+            anyText(55, 72, nome, (255, 255, 255))
+            anyText(55, 72+ 10*rectHeight, "Luscas", (255, 255, 255))
+            anyText(55, 72+ 4*rectHeight, "Freddy", (255, 255, 255))
+            
+            
+            #condições para o botão START        
+            if select11 == False and 650 > mouse_pos[0] > 510 and 500 > mouse_pos[1] > 450:
+                anyText40(510, 450, "START", (255,255,0))	
+                if click1:
+                    startonline = True
+                    click1 = False
+                    break
+            elif select11 == False:
+                anyText40(510, 450, "START", (255,255,255))	
+            
+            #condições para o botão QUIT     
+            if select11 == False and 730 > mouse_pos[0] > 400 and 570 > mouse_pos[1] > 520:
+                anyText40(400, 520, "QUIT TO MENU", (255,255,0))	
+                if click1:
+                    click1 = False
+                    break
+                    
+            elif select11 == False:
+                anyText40(400, 520, "QUIT TO MENU", (255,255,255))            
+            
         
-        rectHeight = 25
-        rectWidth = 300
         
-        pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 0*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 1*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 2*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 3*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 4*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 5*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 6*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 7*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (0,0,255),     (50,70+ 8*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (100,100,255), (50,70+ 9*rectHeight,rectWidth, rectHeight), 0)
-        
-        pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 10*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 11*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 12*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 13*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 14*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 15*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 16*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 17*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 18*rectHeight,rectWidth, rectHeight), 0)
-        pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 19*rectHeight,rectWidth, rectHeight), 0)
-        
-        anyText(55, 72, nome, (255, 255, 255))
-        anyText(55, 72+ 10*rectHeight, "Luscas", (255, 255, 255))
-        anyText(55, 72+ 4*rectHeight, "Freddy", (255, 255, 255))
-        
-        
-        #condições para o botão START        
-        if select11 == False and 650 > mouse_pos[0] > 510 and 500 > mouse_pos[1] > 450:
-            anyText40(510, 450, "START", (255,255,0))	
-            if click1:
-                startonline = True
-                click1 = False
-                break
-        elif select11 == False:
-            anyText40(510, 450, "START", (255,255,255))	
-        
-        #condições para o botão QUIT     
-        if select11 == False and 730 > mouse_pos[0] > 400 and 570 > mouse_pos[1] > 520:
-            anyText40(400, 520, "QUIT TO MENU", (255,255,0))	
-            if click1:
-                click1 = False
-                break
-                
-        elif select11 == False:
-            anyText40(400, 520, "QUIT TO MENU", (255,255,255))            
-        
-    
-    
         pygame.display.update()
         
-###################################################################################
-
+##################################################################################
+    oiserv = False
     #loop JOIN
     while select11:
         gameDisplay.fill((121, 202, 249))
@@ -953,11 +1127,23 @@ while True:
             anyText40(350, 375, "RANDOM", (255,255,0))
             if click1:
                 selectTeam = True
-                team = 'blue'
+                team = 'random'
+                
                 click1 = False
                 
         elif selectTeam == False:
             anyText40(350, 375, "RANDOM", (255,255,255))
+            
+        if selectTeam and oiserv == False:
+            
+            def funcSendTeam():
+                client.closeConnection()
+                client.sendMyTeam(team)
+                
+            t1 = Thread(target=funcSendTeam)
+            t1.start()
+            oiserv = True
+            
                 
         if selectTeam:
             anyText40(260, 10, "JOIN GAME", (255, 255, 255))
@@ -988,7 +1174,7 @@ while True:
             pygame.draw.rect(gameDisplay, (255,0,0),     (50,70+ 18*rectHeight,rectWidth, rectHeight), 0)
             pygame.draw.rect(gameDisplay, (255,100,100), (50,70+ 19*rectHeight,rectWidth, rectHeight), 0)
             
-            anyText(55, 72, nome, (255, 255, 255))
+            anyText(55, 72 + 0*rectHeight, nome, (255, 255, 255))
             anyText(55, 72+ 10*rectHeight, "Luscas", (255, 255, 255))
             anyText(55, 72+ 4*rectHeight, "Freddy", (255, 255, 255))
             
@@ -1149,7 +1335,7 @@ while True:
             flagB6(blueflag_pos)
         else:
             flagR0(redflag_pos)
-            flagB4(blueflag_pos)
+            flagB5(blueflag_pos)
         
         QZ_bg(40,155 + camera(x) *taxa + 1000 + Tela)
         PM_bg(620,155 + camera(x) *taxa + 1000 + Tela)
@@ -1321,36 +1507,73 @@ while True:
                 if ev.key == pygame.K_m and px > 0 and px < 400:
                     px -= valorPress
         
-    
+        
+#        escolhaPer1 = p_gui1(personagem_pos1x,personagem_pos1y)
+#        escolhaPer2 = p_gui2(personagem_pos1x,personagem_pos1y)
+#        escolhaPer3 = p_gui1d(personagem_pos1x,personagem_pos1y)
+#        escolhaPer4 = p_gui2d(personagem_pos1x,personagem_pos1y)
+#        
+#        escolhaPerLista = [escolhaPer1, escolhaPer2, escolhaPer3, escolhaPer4]
+        
+        
+
                 
         gameDisplay.fill(bg_color)
         
         if contadorFrames > 600:
             bgINSANE(0, 0 + camera(x) + Tela)
             sunR(0, 220 + camera(x) + Tela)
+            mountain_bg(-30, 400 + camera(x) + Tela)
+            cloud22(cl_x3, -100 + camera(x) + Tela - 2000)
+            cloud12(cl_x4, 0 + camera(x) + Tela - 2000)
+            cloud22(cl_x5, -150 + camera(x) + Tela - 1600)
+            cloud12(cl_x6, 50 + camera(x) + Tela - 1600)
+            cloud22(cl_x7, -250 + camera(x) + Tela - 1200)
+            cloud12(cl_x8, 0 + camera(x) + Tela - 1200)
+            cloud22(cl_x9, -150 + camera(x) + Tela - 800)
+            cloud12(cl_x10, 50 + camera(x) + Tela - 800)
+            cloud22(cl_x11, -50 + camera(x) + Tela - 400)
+            cloud12(cl_x12, 100 + camera(x) + Tela - 400)
+            cloud22(cl_x1, -50 + camera(x) + Tela)
+            cloud12(cl_x2, 0 + camera(x) + Tela)
         elif contadorFrames > 400:
             bgHIGH(0, 0 + camera(x) + Tela)
             sun(0, 220 + camera(x) + Tela)
+            mountain_bg(-30, 400 + camera(x) + Tela)
+            cloud21(cl_x3, -100 + camera(x) + Tela - 2000)
+            cloud11(cl_x4, 0 + camera(x) + Tela - 2000)
+            cloud21(cl_x5, -150 + camera(x) + Tela - 1600)
+            cloud11(cl_x6, 50 + camera(x) + Tela - 1600)
+            cloud21(cl_x7, -250 + camera(x) + Tela - 1200)
+            cloud11(cl_x8, 0 + camera(x) + Tela - 1200)
+            cloud21(cl_x9, -150 + camera(x) + Tela - 800)
+            cloud11(cl_x10, 50 + camera(x) + Tela - 800)
+            cloud21(cl_x11, -50 + camera(x) + Tela - 400)
+            cloud11(cl_x12, 100 + camera(x) + Tela - 400)
+            cloud21(cl_x1, -50 + camera(x) + Tela)
+            cloud11(cl_x2, 0 + camera(x) + Tela)
         else:
             bgLOW(0, 0 + camera(x) + Tela)
             sun(0, 220 + camera(x) + Tela)
+            mountain_bg(-30, 400 + camera(x) + Tela)
+            cloud2(cl_x3, -100 + camera(x) + Tela - 2000)
+            cloud1(cl_x4, 0 + camera(x) + Tela - 2000)
+            cloud2(cl_x5, -150 + camera(x) + Tela - 1600)
+            cloud1(cl_x6, 50 + camera(x) + Tela - 1600)
+            cloud2(cl_x7, -250 + camera(x) + Tela - 1200)
+            cloud1(cl_x8, 0 + camera(x) + Tela - 1200)
+            cloud2(cl_x9, -150 + camera(x) + Tela - 800)
+            cloud1(cl_x10, 50 + camera(x) + Tela - 800)
+            cloud2(cl_x11, -50 + camera(x) + Tela - 400)
+            cloud1(cl_x12, 100 + camera(x) + Tela - 400)
+            cloud2(cl_x1, -50 + camera(x) + Tela)
+            cloud1(cl_x2, 0 + camera(x) + Tela)
         
         
-        mountain_bg(-30, 400 + camera(x) + Tela)
         
-    
-        cloud2(cl_x3, -100 + camera(x) + Tela - 2000)
-        cloud1(cl_x4, 0 + camera(x) + Tela - 2000)
-        cloud2(cl_x5, -150 + camera(x) + Tela - 1600)
-        cloud1(cl_x6, 50 + camera(x) + Tela - 1600)
-        cloud2(cl_x7, -250 + camera(x) + Tela - 1200)
-        cloud1(cl_x8, 0 + camera(x) + Tela - 1200)
-        cloud2(cl_x9, -150 + camera(x) + Tela - 800)
-        cloud1(cl_x10, 50 + camera(x) + Tela - 800)
-        cloud2(cl_x11, -50 + camera(x) + Tela - 400)
-        cloud1(cl_x12, 100 + camera(x) + Tela - 400)
-        cloud2(cl_x1, -50 + camera(x) + Tela)
-        cloud1(cl_x2, 0 + camera(x) + Tela)
+        escolha1 = marrom[0]
+        escolha2 = rosa[0]
+        
         
         cl_x1 += 0.3    
         cl_x2 += 0.3
@@ -1424,7 +1647,7 @@ while True:
             flagB6(blueflag_pos)
         else:
             flagR0(redflag_pos)
-            flagB4(blueflag_pos)
+            flagB5(blueflag_pos)
         
         QZ_bg(40,155 + camera(x) *taxa + 1000 + Tela  +  (15*(1+math.sin(2*3.14*(n+10)*0.01)))*0.25)
         PM_bg(620,155 + camera(x) *taxa + 1000 + Tela  +  (15*(1+math.sin(2*3.14*(n+10)*0.01)))*0.25)
@@ -1436,18 +1659,18 @@ while True:
         
         if px > 100:
             if pygame.key.get_pressed()[pygame.K_q] and px < 400 or pygame.key.get_pressed()[pygame.K_z] and px < 400:
-                p_fred2(185,206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2)
+                gameDisplay.blit(escolha1, (0,0))
             else:
-                p_fred1(185,206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2)
+                gameDisplay.blit(escolha1, (0,0))
         else:
             if pygame.key.get_pressed()[pygame.K_q] and px < 400 or pygame.key.get_pressed()[pygame.K_z] and px < 400:
-                p_fred2d(185,206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2)
+                gameDisplay.blit(escolha1, (0,0))
             else:
-                p_fred1d(185,206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2)
+                gameDisplay.blit(escolha1, (0,0))
             
         if px < 300: 
             if pygame.key.get_pressed()[pygame.K_p] and px < 400 or pygame.key.get_pressed()[pygame.K_m] and px < 400:
-                p_gui20(567, 206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2)
+                gameDisplay.blit(escolha2, (567, 206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2))
             else:
                 p_gui10(567, 206 + 25 + camera(x) *taxa + 1000 + Tela  +  TitleSize/2)
         else: 
