@@ -6,7 +6,10 @@ from random import randint
 
 class Server():
 	def __init__(self):
-		self.host = '127.0.0.1' #[ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][1] #pega o IP da máquina
+		try:
+			self.host = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][1] #arrumar para todos pcs try except
+		except:
+			self.host = [ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][0]  #pega o IP da máquina
 		self.port = 80 #a porta da conexão é a porta 80 web (sempre aberta, não precisa)
 
 	def serverStart(self):	#a função inicia o servidor
@@ -41,6 +44,9 @@ class Server():
 		self.callforNames()
 
 	def callforNames(self):
+		receivePlease = Thread(target=self.receiveTeams)
+		receivePlease.start()
+
 		self.NameDict = dict()
 		print('Getting names...')
 		for client in self.clients_connected:
@@ -53,44 +59,46 @@ class Server():
 					print(str(name), 'playing')
 					break
 				except: pass
-		self.separateTeams()
 
-	#sorteia os times aleatóriamente
-	def separateTeams(self):	
+	def receiveTeams(self):	
+		self.ReceiveThreadsDone = 0
 		self.team_blue = list()
 		self.team_red = list()
 		self.random_List = list()
-
 		self.blueDict = dict()
 		self.redDict = dict()
+		self.generalDict = dict()
 
-		print('Getting Teams...')
-		
 		for client in self.clients_connected:
-			client[0].send('send your team'.encode())
-			while True:
-				try:
-					team = client[0].recv(1024)
-					print('Team', str(team))
-					team2 = str(team).split("'")
-					
-					if team2[1] == 'blue':
-						self.team_blue.append(client)
-						self.NameDict[client].append('blue')
-						self.blueDict[self.NameDict[client][0]] = 0
-						print('Blue', self.blueDict)
+			self.generalDict[client[0]] = Thread(target=self.separateTeams, args=(client,))
+			self.generalDict[client[0]].start()
 
-					elif team2[1] == 'red':
-						self.team_red.append(client)
-						self.NameDict[client].append('red')
-						self.redDict[self.NameDict[client][0]] = 0
-						print('Red', self.redDict)
+		while True:
+			if self.ReceiveThreadsDone == len(self.clients_connected):
+				break
+		self.sendTeams()
 
-					elif team2[1] == 'random':
-						print('Random')
-						self.random_List.append(client)
-					break
-				except: pass 
+	#sorteia os times aleatóriamente
+	def separateTeams(self, client):		
+		while True:
+			try:
+				team = client[0].recv(1024)
+				team2 = str(team).split("'")
+				
+				if team2[1] == 'blue':
+					self.team_blue.append(client)
+					self.NameDict[client].append('blue')
+					self.blueDict[self.NameDict[client][0]] = 0
+
+				elif team2[1] == 'red':
+					self.team_red.append(client)
+					self.NameDict[client].append('red')
+					self.redDict[self.NameDict[client][0]] = 0
+
+				elif team2[1] == 'random':
+					self.random_List.append(client)
+				break
+			except: pass
 
 		for client in self.random_List:		
 			if len(self.team_blue) < len(self.team_red):
@@ -113,8 +121,7 @@ class Server():
 					self.team_red.append(client)
 					self.NameDict[client].append('red')
 					self.redDict[self.NameDict[client][0]] = 0		
-
-		self.sendTeams()
+		self.ReceiveThreadsDone += 1
 
 	def sendTeams(self):
 		print('Sending teams...')
@@ -285,5 +292,9 @@ class Server():
 
 		self.waitStart()
 
-server = Server()
-server.serverStart()
+	def Close(self):
+		self.servertcp.close()
+		print('Server Closed')
+
+#server = Server()
+#server.serverStart()

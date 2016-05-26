@@ -1,12 +1,15 @@
 import time, socket
-from threading import Thread  
+from threading import Thread
+from random import randint  
 
 #O programa segue uma ordem "cronológica", na qual a função anterior chama a próxima. Nas divisões, são momentos em que a anterior não chamou a seguinte 
 
 class Client():
 	def __init__(self):
+		self.closeAll = False
 		self.port = 80
 		self.connection_status = 'none'
+		self.percentage = .5
 
 	def showMyHost(self): 
 		try:
@@ -35,7 +38,7 @@ class Client():
 
 		self.checkStatus('Trying to connect...')
 
-		while True:
+		while not self.closeAll:
 				if time.clock()-timeout0 >= 20:
 					timeout = True
 					break
@@ -62,16 +65,22 @@ class Client():
 			else:
 				return 'done: not principal'
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	def NameSend(self):
-		print('Waiting to send Name')
+	def waitToSend(self):
+		print('Waiting to send')
 		while True:
 			try:
-				wait_name = self.clientTCP.recv(1024)
-				if wait_name == 'send your name'.encode():
-					self.clientTCP.send(str(self.Name).encode())
-					print('Name sent')
+				data = self.clientTCP.recv(1024)
+				if data == 'connection closed'.encode():
 					break
-			except: pass
+			except: pass		
+
+	def NameSend(self):
+		print('Sending name...')
+		self.clientTCP.send('sending my name'.encode())
+		time.sleep(.1)
+		self.clientTCP.send(str(self.setName).encode())
+		print('Name sent')
+		self.sendMyTeam()
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	def checkStatus(self, value):
 		self.connection_status = value
@@ -83,71 +92,70 @@ class Client():
 	def closeConnection(self):
 		self.clientTCP.send('close'.encode())
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------		
-	def sendMyTeam(self): #blue, red or random
-		team = self.myTeam()
-
-		self.clientTCP.send(str(team).encode())
-		print("Team sent")
-		print('Waiting team confirmation...')
-		timeout = time.clock()
-
-		while True:
-			try:
-				team = self.clientTCP.recv(1024)
-				team2 = str(team).split("'")
-				team3 = str(team2[0]).split('"')
-				self.myteam = str(team3[1])
-				self.teamsDisplay = (team2[1], team2[2])
-				print('Team Received')
-				break
-			except: pass
-			
-		print('Got my team')
-
 	def setTeam(self, team):
+		if team == 'random':
+			number = randint(0, 1)
+			if number == 0:
+				team = 'blue'
+			else:
+				team = 'red'
 		self.myteam = team
+
+	def sendMyTeam(self):
+		print('Sending my team...')
+		self.clientTCP.send('sending my team'.encode())
+		time.sleep(.1)
+		self.clientTCP.send(str(self.myteam).encode())
+		print('Team sent')
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	def myTeam(self):
-		return self.myteam
-#----------------------------------------------------------------------------------------------------------------------------------------------------------------
-	def displayTeam(self):
-		return self.teamsDisplay
+	def displayTeams(self):
+		self.clientTCP.send('update players'.encode())
+		with self.setblocking(1):
+			update = self.clientTCP.recv(1024)
+		update2 = str(update).split("'")
+		update3 = str(update).split("][")
+		redUp = (str(update3).split("["))[1].split(",")
+		blueUp = (str(update3).split("]"))[2].split(",")
+		print(redUp, blueUp)
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	def StartGame(self):
+		print('Sending start...')
 		self.clientTCP.send('start game'.encode())
+		print('Start sent')
 		self.waitStart()
 
-	def waitStart(self):
-		while True:
+	def waitStart(self):	
+		print('Waiting start...')	
+		while not self.closeAll:
 			try:
 				data = self.clientTCP.recv(1024)
-				if data == 'start'.encode():
-					break
+				break
 			except: pass
 		print('started')
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	def sendPackages(self, value):
 		self.totalclicks(int(value))
-		self.clientTCP.send((self.Name + "'" + str(value)).encode())
-
+		self.clientTCP.send((str(value)).encode())
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	def totalclicks(self, value):
 		self.myclicks = value
-
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	def receivePoints(self):
-		while True:
+		while not self.closeAll:
 			try:
-				percentage = self.clientTCP.recv(1024)
+				self.percentage = self.clientTCP.recv(1024)
 				print(percentage)
-				if percentage == 'game ended'.encode() or percentage == 'restart game'.encode():
+				if self.percentage == 'client close game'.encode() or self.percentage == 'client restart game'.encode():
 					self.getHighScore()
 					break
-				break
 			except: pass
-		return percentage
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	def getPercentage(self):
+		return self.percentage
 
 	def getHighScore(self):
 		print('Waiting Highscore...')
-		while True:
+		while not self.closeAll:
 			try:
 				self.highscore = self.clientTCP.recv(1024)
 				break
@@ -161,6 +169,7 @@ class Client():
 		self.Close()
 
 	def Close(self):
+		self.closeAll = True
 		print('Client Closed')
 		self.clientTCP.close()
 
